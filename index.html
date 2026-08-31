@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b57d0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>YF Boss v2</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#14213d;--muted:#6b7280;--line:#e5e7eb;--blue:#0b57d0;--soft:#eaf2ff;--green:#15803d;--red:#c2410c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.app{max-width:760px;margin:auto;padding:16px 14px 94px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.top h1{margin:0;font-size:25px}.top small{color:var(--muted)}
+.pill{background:var(--soft);color:var(--blue);padding:7px 10px;border-radius:999px;font-weight:800;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card,.person,.box{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 7px 22px rgba(15,23,42,.05)}
+.card{padding:14px}.label{font-size:12px;color:var(--muted);margin-bottom:6px}.big{font-size:21px;font-weight:850}.green{color:var(--green)}.red{color:var(--red)}
+.section{margin-top:18px}.section h2{font-size:17px;margin:0 0 9px}.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+button{font:inherit}.q{border:0;background:#fff;border-radius:14px;padding:13px 5px;font-weight:750;box-shadow:0 6px 18px rgba(15,23,42,.05)}.primary{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 13px;font-weight:800}.secondary{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 13px;font-weight:750}
+.list{display:flex;flex-direction:column;gap:8px}.person{padding:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}.person:active{transform:scale(.995)}
+.name{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:4px}.amt{font-weight:850;white-space:nowrap}
+.empty{padding:18px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:var(--muted);background:#fff;font-size:13px}
+.page{display:none}.page.active{display:block}.toolbar{display:flex;gap:8px;margin-bottom:10px}.toolbar>*{flex:1}
+.search{width:100%;border:1px solid var(--line);border-radius:13px;padding:12px 13px;font-size:16px;margin-bottom:10px;background:#fff}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);backdrop-filter:blur(12px);padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:20}.navin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr)}.nav button{border:0;background:transparent;padding:7px 1px;font-size:10px;color:#64748b;border-radius:10px}.nav b{display:block;font-size:17px}.nav .active{background:var(--soft);color:var(--blue)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-end;z-index:50}.modal.show{display:flex}.sheet{width:100%;max-width:760px;margin:auto;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.sheet h3{margin:0 0 14px}
+.field{margin-bottom:11px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.field input,.field select,.field textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:12px;font-size:16px;background:#fff}.field textarea{min-height:65px}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions{display:grid;grid-template-columns:1fr 2fr;gap:8px}.actions button{border:0;border-radius:12px;padding:13px;font-weight:850}.cancel{background:#eef2f7}.save{background:var(--blue);color:#fff}
+.detailHead{display:flex;align-items:center;gap:8px;margin-bottom:12px}.back{border:0;background:#fff;border-radius:11px;padding:9px 11px}.detailHead h2{margin:0;font-size:20px}.detailSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.box{padding:10px}.box .big{font-size:16px}.note{font-size:12px;color:var(--muted);line-height:1.45}.danger{border:0;background:#fff0ed;color:#b42318;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:800}
+.row{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:8px;align-items:center}.rowtitle{font-weight:750;font-size:14px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,1fr)}.quick{grid-template-columns:repeat(6,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="top"><div><h1>YF Boss</h1><small>生意管理 · RM</small></div><div class="pill">v2</div></div>
+
+ <section id="home" class="page active">
+  <div class="grid">
+   <div class="card"><div class="label">💵 Cash Balance</div><div class="big" id="hCash">RM 0.00</div></div>
+   <div class="card"><div class="label">👤 客户欠款</div><div class="big red" id="hCust">RM 0.00</div></div>
+   <div class="card"><div class="label">🚚 Supplier 欠款</div><div class="big red" id="hSupp">RM 0.00</div></div>
+   <div class="card"><div class="label">👷 薪水余额</div><div class="big red" id="hSalary">RM 0.00</div></div>
+   <div class="card"><div class="label">🧾 本月费用</div><div class="big" id="hExpense">RM 0.00</div></div>
+   <div class="card"><div class="label">📈 本月现金净额</div><div class="big green" id="hMonthCash">RM 0.00</div></div>
+  </div>
+  <div class="section"><h2>快速新增</h2><div class="quick">
+   <button class="q" onclick="openForm('cash')">💵<br>Cash</button><button class="q" onclick="openForm('customer')">👤<br>客户</button>
+   <button class="q" onclick="openForm('supplier')">🚚<br>Supplier</button><button class="q" onclick="openForm('salary')">👷<br>薪水</button>
+   <button class="q" onclick="openForm('expense')">🧾<br>费用</button><button class="q" onclick="exportData()">⬇️<br>备份</button>
+  </div></div>
+  <div class="section"><h2>最近记录</h2><div id="recent" class="list"></div></div>
+ </section>
+
+ <section id="customer" class="page">
+  <input class="search" placeholder="🔎 搜索客户" oninput="renderPeople('customer',this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('customer')">＋ 新增客户记录</button></div>
+  <div id="customerPeople" class="list"></div>
+ </section>
+
+ <section id="supplier" class="page">
+  <input class="search" placeholder="🔎 搜索 Supplier" oninput="renderPeople('supplier',this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('supplier')">＋ 新增 Supplier 记录</button></div>
+  <div id="supplierPeople" class="list"></div>
+ </section>
+
+ <section id="salary" class="page">
+  <input class="search" placeholder="🔎 搜索员工" oninput="renderPeople('salary',this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('salary')">＋ 新增薪水记录</button></div>
+  <div id="salaryPeople" class="list"></div>
+ </section>
+
+ <section id="cash" class="page"><div class="toolbar"><button class="primary" onclick="openForm('cash')">＋ 新增 Cash</button></div><div id="cashList" class="list"></div></section>
+ <section id="expense" class="page"><div class="toolbar"><button class="primary" onclick="openForm('expense')">＋ 新增费用</button></div><div id="expenseList" class="list"></div></section>
+
+ <section id="detail" class="page">
+  <div class="detailHead"><button class="back" onclick="backDetail()">←</button><h2 id="detailName"></h2></div>
+  <div class="detailSummary">
+   <div class="box"><div class="label" id="dL1">新增</div><div class="big" id="dAdd">RM0</div></div>
+   <div class="box"><div class="label" id="dL2">已付</div><div class="big" id="dPaid">RM0</div></div>
+   <div class="box"><div class="label">余额</div><div class="big red" id="dDue">RM0</div></div>
+  </div>
+  <div class="toolbar"><button class="primary" id="detailAdd">＋ 新增记录</button></div>
+  <div id="detailList" class="list"></div>
+ </section>
+</div>
+
+<div class="nav"><div class="navin">
+<button class="active" onclick="go('home',this)"><b>🏠</b>首页</button><button onclick="go('cash',this)"><b>💵</b>Cash</button>
+<button onclick="go('customer',this)"><b>👤</b>客户</button><button onclick="go('supplier',this)"><b>🚚</b>Supplier</button>
+<button onclick="go('salary',this)"><b>👷</b>薪水</button><button onclick="go('expense',this)"><b>🧾</b>费用</button>
+</div></div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeForm()"><div class="sheet">
+<h3 id="formTitle">新增记录</h3>
+<form onsubmit="saveEntry(event)">
+<input id="fType" type="hidden"><div class="two">
+<div class="field"><label>日期</label><input id="fDate" type="date" required></div>
+<div class="field"><label>金额 RM</label><input id="fAmount" type="number" min="0" step=".01" inputmode="decimal" required placeholder="0.00"></div></div>
+<div id="dynamic"></div>
+<div class="field"><label>备注</label><textarea id="fNote" placeholder="货品、单号、说明等"></textarea></div>
+<div class="actions"><button type="button" class="cancel" onclick="closeForm()">取消</button><button class="save">保存</button></div>
+</form></div></div>
+
+<script>
+const KEY='yf_boss_v2', OLD='bizbook_v1';
+let data=JSON.parse(localStorage.getItem(KEY)||'null');
+if(!data){ data=JSON.parse(localStorage.getItem(OLD)||'[]'); localStorage.setItem(KEY,JSON.stringify(data)); }
+let detail={type:null,name:null,from:null};
+const money=n=>'RM '+Number(n||0).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function signed(x){if(x.type==='cash')return x.action==='in'?x.amount:-x.amount;if(x.type==='customer')return x.action==='debt'?x.amount:-x.amount;if(x.type==='supplier')return x.action==='purchase'?x.amount:-x.amount;if(x.type==='salary')return x.action==='salary'?x.amount:-x.amount;if(x.type==='expense')return x.amount;return 0}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');if(['customer','supplier','salary'].includes(id))renderPeople(id,'');window.scrollTo(0,0)}
+function openForm(type,preset=''){
+ fType.value=type;fDate.value=today();fAmount.value='';fNote.value='';const d=document.getElementById('dynamic');
+ const titles={cash:'新增 Cash',customer:'客户欠款 / Payment',supplier:'Supplier 进货 / Payment',salary:'员工薪水',expense:'新增费用'};formTitle.textContent=titles[type];
+ if(type==='cash')d.innerHTML=`<div class="field"><label>类型</label><select id="fAction"><option value="in">Cash In 收入</option><option value="out">Cash Out 支出</option></select></div><div class="field"><label>项目 / 对方</label><input id="fName" value="${esc(preset)}" placeholder="例如：现金销售"></div>`;
+ if(type==='customer')d.innerHTML=`<div class="field"><label>客户名称</label><input id="fName" required value="${esc(preset)}" placeholder="客户名称"></div><div class="field"><label>类型</label><select id="fAction"><option value="debt">新增欠款</option><option value="payment">Payment 收款</option></select></div>`;
+ if(type==='supplier')d.innerHTML=`<div class="field"><label>Supplier</label><input id="fName" required value="${esc(preset)}" placeholder="Supplier 名称"></div><div class="field"><label>类型</label><select id="fAction"><option value="purchase">进货 / 新增应付</option><option value="payment">Payment 已付款</option></select></div>`;
+ if(type==='salary')d.innerHTML=`<div class="field"><label>员工</label><input id="fName" required value="${esc(preset)}" placeholder="员工名称"></div><div class="field"><label>类型</label><select id="fAction"><option value="salary">工资 / OT / Bonus</option><option value="paid">已付 / Advance</option></select></div>`;
+ if(type==='expense')d.innerHTML=`<div class="field"><label>分类</label><select id="fName"><option>油钱</option><option>电费</option><option>水费</option><option>租金</option><option>维修</option><option>交通</option><option>包装</option><option>冰</option><option>杂费</option><option>其他</option></select></div>`;
+ modal.classList.add('show');setTimeout(()=>fAmount.focus(),100)
+}
+function closeForm(){modal.classList.remove('show')}
+function saveEntry(e){e.preventDefault();data.push({id:Date.now()+Math.random(),type:fType.value,date:fDate.value,amount:+fAmount.value,note:fNote.value.trim(),name:(document.getElementById('fName')?.value||'').trim(),action:(document.getElementById('fAction')?.value||'expense')});persist();closeForm();if(detail.type===fType.value&&detail.name)showDetail(detail.type,detail.name,detail.from)}
+function del(id){if(confirm('确定删除这笔记录？')){data=data.filter(x=>x.id!==id);persist();if(detail.type)showDetail(detail.type,detail.name,detail.from)}}
+function label(x){return ({cash:{in:'Cash In',out:'Cash Out'},customer:{debt:'新增欠款',payment:'Payment'},supplier:{purchase:'进货 / 应付',payment:'Payment'},salary:{salary:'工资 / OT / Bonus',paid:'已付 / Advance'},expense:{expense:'费用'}}[x.type]||{})[x.action]||'记录'}
+function row(x){let neg=(x.type==='expense'||(x.type==='cash'&&x.action==='out')||(['customer','supplier','salary'].includes(x.type)&&signed(x)>0));return `<div class="row"><div><div class="rowtitle">${esc(x.name||label(x))}</div><div class="meta">${esc(x.date)} · ${esc(label(x))}${x.note?' · '+esc(x.note):''}</div></div><div style="text-align:right"><div class="amt ${neg?'red':'green'}">${money(x.amount)}</div><button class="danger" onclick="del(${x.id})">删除</button></div></div>`}
+function renderPeople(type,q=''){let m={};data.filter(x=>x.type===type&&x.name).forEach(x=>{m[x.name]=(m[x.name]||0)+signed(x)});let a=Object.entries(m).filter(([n])=>n.toLowerCase().includes(q.toLowerCase())).sort((a,b)=>b[1]-a[1]);let id=type+'People';document.getElementById(id).innerHTML=a.length?a.map(([n,v])=>`<div class="person" onclick="showDetail('${type}','${esc(n)}','${type}')"><div><div class="name">${esc(n)}</div><div class="meta">点进去看全部明细</div></div><div class="amt ${v>0?'red':'green'}">${money(Math.max(0,v))}</div></div>`).join(''):'<div class="empty">还没有记录</div>'}
+function showDetail(type,name,from){detail={type,name,from};document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('detail').classList.add('active');detailName.textContent=name;let a=data.filter(x=>x.type===type&&x.name===name).sort((x,y)=>y.date.localeCompare(x.date)||y.id-x.id);let plus=a.filter(x=>signed(x)>0).reduce((s,x)=>s+x.amount,0),minus=a.filter(x=>signed(x)<0).reduce((s,x)=>s+x.amount,0),due=plus-minus;dAdd.textContent=money(plus);dPaid.textContent=money(minus);dDue.textContent=money(Math.max(0,due));dL1.textContent=type==='customer'?'总欠款':type==='supplier'?'总进货':'工资/OT';dL2.textContent=type==='customer'?'已收款':type==='supplier'?'已付款':'已付/预支';detailAdd.onclick=()=>openForm(type,name);detailList.innerHTML=a.length?a.map(row).join(''):'<div class="empty">没有明细</div>';window.scrollTo(0,0)}
+function backDetail(){let b=[...document.querySelectorAll('.nav button')].find(x=>x.textContent.includes(detail.from==='customer'?'客户':detail.from==='supplier'?'Supplier':'薪水'));go(detail.from,b);detail={type:null,name:null,from:null}}
+function render(){let cash=data.filter(x=>x.type==='cash'),cust=data.filter(x=>x.type==='customer'),supp=data.filter(x=>x.type==='supplier'),sal=data.filter(x=>x.type==='salary'),exp=data.filter(x=>x.type==='expense'),ym=today().slice(0,7);let sum=a=>a.reduce((s,x)=>s+signed(x),0);hCash.textContent=money(sum(cash));hCust.textContent=money(Math.max(0,sum(cust)));hSupp.textContent=money(Math.max(0,sum(supp)));hSalary.textContent=money(Math.max(0,sum(sal)));hExpense.textContent=money(exp.filter(x=>x.date.startsWith(ym)).reduce((s,x)=>s+x.amount,0));hMonthCash.textContent=money(sum(cash.filter(x=>x.date.startsWith(ym))));cashList.innerHTML=cash.length?[...cash].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(row).join(''):'<div class="empty">还没有 Cash 记录</div>';expenseList.innerHTML=exp.length?[...exp].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(row).join(''):'<div class="empty">还没有费用记录</div>';let r=[...data].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).slice(0,8);recent.innerHTML=r.length?r.map(row).join(''):'<div class="empty">先新增第一笔记录</div>';renderPeople('customer');renderPeople('supplier');renderPeople('salary')}
+function exportData(){let blob=new Blob([JSON.stringify({version:2,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='YF_Boss_Backup_'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+render();
+</script>
+</body></html>
