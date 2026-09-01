@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b57d0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>YF Boss v7.1</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#14213d;--muted:#6b7280;--line:#e5e7eb;--blue:#0b57d0;--soft:#eaf2ff;--green:#15803d;--red:#c2410c;--amber:#b45309}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.app{max-width:760px;margin:auto;padding:16px 14px 100px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.top h1{margin:0;font-size:25px}.top small{color:var(--muted)}
+.pill{background:var(--soft);color:var(--blue);padding:7px 10px;border-radius:999px;font-weight:800;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card,.person,.box{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 7px 22px rgba(15,23,42,.05)}
+.card{padding:14px}.label{font-size:12px;color:var(--muted);margin-bottom:6px}.big{font-size:20px;font-weight:850}.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}
+.section{margin-top:18px}.section h2{font-size:17px;margin:0 0 9px}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+button{font:inherit}.q{border:0;background:#fff;border-radius:14px;padding:12px 4px;font-weight:750;box-shadow:0 6px 18px rgba(15,23,42,.05)}.primary{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 13px;font-weight:800}.secondary{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 13px;font-weight:750}
+.list{display:flex;flex-direction:column;gap:8px}.person{padding:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}.person:active{transform:scale(.995)}
+.name{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}.amt{font-weight:850;white-space:nowrap}
+.empty{padding:18px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:var(--muted);background:#fff;font-size:13px}
+.page{display:none}.page.active{display:block}.toolbar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}.toolbar>*{flex:1;min-width:125px}
+.search{width:100%;border:1px solid var(--line);border-radius:13px;padding:12px 13px;font-size:16px;margin-bottom:10px;background:#fff}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);backdrop-filter:blur(12px);padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:20}.navin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr)}.nav button{border:0;background:transparent;padding:7px 1px;font-size:10px;color:#64748b;border-radius:10px}.nav b{display:block;font-size:17px}.nav .active{background:var(--soft);color:var(--blue)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-end;z-index:50}.modal.show{display:flex}.sheet{width:100%;max-width:760px;margin:auto;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.sheet h3{margin:0 0 14px}
+.field{margin-bottom:11px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.field input,.field select,.field textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:12px;font-size:16px;background:#fff}.field textarea{min-height:65px}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions{display:grid;grid-template-columns:1fr 2fr;gap:8px}.actions button{border:0;border-radius:12px;padding:13px;font-weight:850}.cancel{background:#eef2f7}.save{background:var(--blue);color:#fff}
+.detailHead{display:flex;align-items:center;gap:8px;margin-bottom:12px}.back{border:0;background:#fff;border-radius:11px;padding:9px 11px}.detailHead h2{margin:0;font-size:20px}.detailSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.box{padding:10px}.box .big{font-size:16px}
+.row{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:8px;align-items:center}.rowtitle{font-weight:750;font-size:14px}.danger{border:0;background:#fff0ed;color:#b42318;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:800}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:10px;padding-bottom:2px}.tabs button{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;white-space:nowrap;font-weight:750}.tabs button.on{background:var(--soft);border-color:#bfd5ff;color:var(--blue)}
+.kpi{font-size:11px;color:var(--muted);margin-top:5px}
+.statement{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}.statement h3{margin:0 0 4px}.statement table{width:100%;border-collapse:collapse;font-size:12px}.statement th,.statement td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}.statement th:last-child,.statement td:last-child{text-align:right}
+.filebtn{display:block;border:1px dashed #94a3b8;border-radius:14px;padding:14px;text-align:center;background:#fff;font-weight:750}
+.note{font-size:12px;color:var(--muted);line-height:1.55}
+.paidGlow{background:#ecfdf3!important;border-color:#86efac!important;box-shadow:0 0 0 2px rgba(34,197,94,.08),0 7px 22px rgba(15,23,42,.05)!important}.groupTag{display:inline-block;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:800}.reportGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.reportLine{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.statusWrap{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center;margin-top:14px}.donut{width:140px;height:140px;border-radius:50%;display:grid;place-items:center;position:relative;margin:auto}.donut:after{content:"";width:82px;height:82px;border-radius:50%;background:#fff;position:absolute}.donutCenter{position:relative;z-index:2;text-align:center;font-weight:850;font-size:18px}.legendRow{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}.paidDot{background:#22c55e}.dueDot{background:#fb923c}.statusBar{height:12px;background:#eef2f7;border-radius:999px;overflow:hidden;margin-top:6px}.statusBar>span{display:block;height:100%;border-radius:999px}.statusPaid{background:#22c55e}.statusDue{background:#fb923c}.subhead{font-size:15px;font-weight:850;margin:16px 0 8px}@media(max-width:440px){.statusWrap{grid-template-columns:1fr}.donut{width:130px;height:130px}}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,1fr)}.quick{grid-template-columns:repeat(8,1fr)}}
+@media print{body{background:#fff}.top,.nav,.toolbar,.back,.no-print{display:none!important}.app{padding:0}.page{display:none!important}#statement.active,#monthly.active{display:block!important}.statement{border:0;box-shadow:none}}
+
+.paytableWrap{overflow:auto;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid var(--line);border-radius:16px;max-height:70vh}.paytable{border-collapse:separate;border-spacing:0;min-width:900px;width:max-content;font-size:11px}.paytable th,.paytable td{border-right:1px solid #dbe3ee;border-bottom:1px solid #dbe3ee;padding:7px 8px;text-align:right;min-width:88px;height:34px}.paytable th{background:#eaf2ff;font-weight:850;text-align:center;position:sticky;top:0;z-index:3}.paytable .day{position:sticky;left:0;z-index:2;background:#f8fafc;min-width:48px;text-align:center;font-weight:850}.paytable th.day{z-index:5;background:#dbeafe}.paytable td.paidCell{background:#d9ead3;color:#166534;font-weight:850}.paytable td.unpaidCell{background:#fff;color:#b42318;font-weight:850}.paytable td.partialCell{background:#fff4cc;color:#92400e;font-weight:850}.paytable .totalRow td{position:sticky;bottom:0;background:#eef2f7;font-weight:900;border-top:2px solid #94a3b8}.paytable .totalRow td.paidCell{background:#d9ead3}.payLegend{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;font-size:12px}.swatch{width:12px;height:12px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}.matrixHead{display:flex;justify-content:space-between;align-items:end;gap:8px;flex-wrap:wrap;margin-bottom:8px}.matrixHead .field{margin:0;min-width:145px}.miniStats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.miniStats .box{padding:9px}.miniStats .big{font-size:14px}@media(max-width:520px){.miniStats{grid-template-columns:1fr 1fr}}
+
+.ledgerWrap{overflow:auto;border:1px solid #ddd;border-radius:12px;margin-top:12px}.ledger{width:100%;border-collapse:collapse;min-width:620px;background:#fff}.ledger th,.ledger td{border:1px solid #ddd;padding:9px 10px;text-align:right}.ledger th{background:#f5f5f5}.ledger th:first-child,.ledger td:first-child{text-align:left;font-weight:700}.ledger .sum td{font-weight:900;background:#f4f4f4}.ledger .net td{font-weight:900;background:#fff4b8;font-size:17px}.ledger input{width:100%;box-sizing:border-box;border:1px solid #ddd;border-radius:6px;padding:7px;background:#fff}.ledger input[type=number]{text-align:right}.ledgerNote{font-size:12px;color:#666;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="top"><div><h1>YF Boss</h1><small>生意管理 · RM</small></div><div class="pill">v7</div></div>
+
+ <section id="home" class="page active">
+  <div class="grid">
+   <div class="card"><div class="label">💵 Cash Balance</div><div class="big" id="hCash">RM 0.00</div></div>
+   <div class="card"><div class="label">👤 客户欠款</div><div class="big red" id="hCust">RM 0.00</div></div>
+   <div class="card"><div class="label">🚚 Supplier 欠款</div><div class="big red" id="hSupp">RM 0.00</div></div>
+   <div class="card"><div class="label">📦 库存价值</div><div class="big" id="hStock">RM 0.00</div></div>
+   <div class="card"><div class="label">🛒 今日销售</div><div class="big green" id="hTodaySales">RM 0.00</div></div>
+   <div class="card"><div class="label">📈 今日利润</div><div class="big green" id="hTodayProfit">RM 0.00</div></div>
+   <div class="card"><div class="label">📊 本月销售</div><div class="big" id="hMonthSales">RM 0.00</div></div>
+   <div class="card"><div class="label">💰 本月利润</div><div class="big green" id="hMonthProfit">RM 0.00</div></div>
+  </div>
+  <div class="section"><h2>快速新增</h2><div class="quick">
+   <button class="q" onclick="openForm('sale')">🛒<br>销售</button>
+   <button class="q" onclick="openForm('cash')">💵<br>Cash</button>
+   <button class="q" onclick="openForm('customer')">👤<br>客户</button>
+   <button class="q" onclick="openForm('supplier')">🚚<br>Supplier</button>
+   <button class="q" onclick="openForm('inventory')">📦<br>库存</button>
+   <button class="q" onclick="openForm('expense')">🧾<br>费用</button>
+   <button class="q" onclick="openForm('salary')">👷<br>薪水</button>
+   <button class="q" onclick="go('more',document.querySelector('[data-nav=more]'))">⚙️<br>更多</button>
+  </div></div>
+  <div class="section"><h2>最近记录</h2><div id="recent" class="list"></div></div>
+ </section>
+
+ <section id="sales" class="page">
+  <div class="toolbar"><button class="primary" onclick="openForm('sale')">＋ 新增销售</button></div>
+  <div class="tabs"><button class="on" onclick="salesFilter='all';renderSales(this)">全部</button><button onclick="salesFilter='today';renderSales(this)">今天</button><button onclick="salesFilter='month';renderSales(this)">本月</button></div>
+  <div id="salesList" class="list"></div>
+ </section>
+
+ <section id="customer" class="page">
+  <div id="customerTabs" class="tabs"></div>
+  <input class="search" placeholder="🔎 搜索客户" oninput="renderPeople('customer',this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('customer')">＋ 欠款 / Payment</button><button class="secondary" onclick="toggleCustomerMatrix()">📅 客户月结付款表</button></div>
+  <div id="customerMatrix" style="display:none;margin-bottom:14px"></div>
+  <div id="customerPeople" class="list"></div>
+ </section>
+
+ <section id="supplier" class="page">
+  <div id="supplierTabs" class="tabs"></div>
+  <input class="search" placeholder="🔎 搜索 Supplier" oninput="renderPeople('supplier',this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('supplier')">＋ 进货 / Payment</button></div>
+  <div id="supplierPeople" class="list"></div>
+ </section>
+
+ <section id="inventory" class="page">
+  <input class="search" placeholder="🔎 搜索货品" oninput="renderInventory(this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('inventory')">＋ 库存进 / 出</button></div>
+  <div id="inventoryList" class="list"></div>
+ </section>
+
+ <section id="more" class="page">
+  <div class="grid">
+   <div class="card"><div class="label">👷 员工薪水余额</div><div class="big red" id="mSalary">RM 0.00</div></div>
+   <div class="card"><div class="label">🧾 本月费用</div><div class="big" id="mExpense">RM 0.00</div></div>
+   <div class="card"><div class="label">💵 本月 Cash 净额</div><div class="big" id="mCash">RM 0.00</div></div>
+   <div class="card"><div class="label">📦 库存品项</div><div class="big" id="mItems">0</div></div>
+  </div>
+  <div class="section"><h2>管理</h2><div class="quick">
+   <button class="q" onclick="go('cash')">💵<br>Cash</button>
+   <button class="q" onclick="go('expense')">🧾<br>费用</button>
+   <button class="q" onclick="go('salary')">👷<br>员工</button>
+   <button class="q" onclick="go('vehicle')">🚛<br>车辆</button>
+   <button class="q" onclick="go('monthly')">📊<br>月结总账</button>
+   <button class="q" onclick="exportData()">⬇️<br>备份</button>
+  </div></div>
+  <div class="section"><h2>数据备份与恢复</h2>
+   <button class="primary" style="width:100%;margin-bottom:8px" onclick="exportData()">⬇️ 下载备份 JSON</button>
+   <label class="filebtn">⬆️ 从备份恢复<input id="importFile" type="file" accept=".json,application/json" hidden onchange="importData(event)"></label>
+   <div class="note" style="margin-top:8px">建议每周备份一次。恢复会把备份资料合并进当前资料；相同记录不会重复。</div>
+  </div>
+ </section>
+
+ <section id="cash" class="page"><div class="toolbar"><button class="primary" onclick="openForm('cash')">＋ 新增 Cash In / Out</button></div><div id="cashList" class="list"></div></section>
+ <section id="expense" class="page"><div class="toolbar"><button class="primary" onclick="openForm('expense')">＋ 新增费用</button></div><div id="expenseList" class="list"></div></section>
+ <section id="salary" class="page"><input class="search" placeholder="🔎 搜索员工" oninput="renderPeople('salary',this.value)"><div class="toolbar"><button class="primary" onclick="openForm('salary')">＋ 新增薪水记录</button></div><div id="salaryPeople" class="list"></div></section>
+
+ <section id="vehicle" class="page">
+  <input class="search" placeholder="🔎 搜索车辆 / 车牌" oninput="renderVehicles(this.value)">
+  <div class="toolbar"><button class="primary" onclick="openForm('vehicle')">＋ 新增车辆费用</button></div>
+  <div id="vehicleList" class="list"></div>
+ </section>
+
+ <section id="monthly" class="page">
+  <div class="detailHead"><button class="back" onclick="go('more',document.querySelector('[data-nav=more]'))">←</button><h2>📊 月结总账报表</h2></div>
+  <div class="toolbar no-print"><input id="monthPick" class="search" style="margin:0" type="month" onchange="renderMonthly()"><button class="primary" onclick="window.print()">打印 / 存 PDF</button></div>
+  <div id="monthlyBox"></div>
+ </section>
+
+ <section id="detail" class="page">
+  <div class="detailHead"><button class="back" onclick="backDetail()">←</button><h2 id="detailName"></h2></div>
+  <div class="detailSummary">
+   <div class="box"><div class="label" id="dL1">新增</div><div class="big" id="dAdd">RM0</div></div>
+   <div class="box"><div class="label" id="dL2">已付</div><div class="big" id="dPaid">RM0</div></div>
+   <div class="box"><div class="label">余额</div><div class="big red" id="dDue">RM0</div></div>
+  </div>
+  <div class="toolbar"><button class="primary" id="detailAdd">＋ 新增记录</button><button class="secondary" id="statementBtn" onclick="showStatement()">📄 Statement</button></div>
+  <div id="detailList" class="list"></div>
+ </section>
+
+ <section id="statement" class="page">
+  <div class="detailHead no-print"><button class="back" onclick="backStatement()">←</button><h2 id="statementTitle">Statement</h2></div>
+  <div id="statementBox" class="statement"></div>
+  <div class="toolbar no-print" style="margin-top:10px"><button class="primary" onclick="window.print()">打印 / 存成 PDF</button></div>
+ </section>
+</div>
+
+<div class="nav"><div class="navin">
+<button class="active" data-nav="home" onclick="go('home',this)"><b>🏠</b>首页</button>
+<button data-nav="sales" onclick="go('sales',this)"><b>🛒</b>销售</button>
+<button data-nav="customer" onclick="go('customer',this)"><b>👤</b>客户</button>
+<button data-nav="supplier" onclick="go('supplier',this)"><b>🚚</b>Supplier</button>
+<button data-nav="inventory" onclick="go('inventory',this)"><b>📦</b>库存</button>
+<button data-nav="more" onclick="go('more',this)"><b>☰</b>更多</button>
+</div></div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeForm()"><div class="sheet">
+<h3 id="formTitle">新增记录</h3>
+<form onsubmit="saveEntry(event)">
+<input id="fType" type="hidden">
+<div class="two"><div class="field"><label>日期</label><input id="fDate" type="date" required></div><div class="field" id="amountWrap"><label>金额 RM</label><input id="fAmount" type="number" min="0" step=".01" inputmode="decimal" placeholder="0.00"></div></div>
+<div id="dynamic"></div>
+<div class="field"><label>备注</label><textarea id="fNote" placeholder="货品、单号、说明等"></textarea></div>
+<div class="actions"><button type="button" class="cancel" onclick="closeForm()">取消</button><button class="save">保存</button></div>
+</form></div></div>
+
+<script>
+const KEY='yf_boss_v4', OLD3='yf_boss_v3', OLD2='yf_boss_v2', OLD1='bizbook_v1';
+let data=JSON.parse(localStorage.getItem(KEY)||'null');
+if(!Array.isArray(data)){
+  data=JSON.parse(localStorage.getItem(OLD3)||'null');
+  if(!Array.isArray(data)) data=JSON.parse(localStorage.getItem(OLD2)||'null');
+  if(!Array.isArray(data)) data=JSON.parse(localStorage.getItem(OLD1)||'[]');
+  if(!Array.isArray(data)) data=[];
+  localStorage.setItem(KEY,JSON.stringify(data));
+}
+let detail={type:null,name:null,from:null}, statementBack=null, salesFilter='all';
+const customerGroups=['全部','ALOR GAJAH','华人','海边','Mary','PD','早上'];
+const supplierGroups=['全部','马六甲','冷冻货','瓜拉'];
+let customerGroup='全部', supplierGroup='全部';
+const money=n=>'RM '+Number(n||0).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
+const today=()=>new Date().toLocaleDateString('en-CA');
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const jsq=s=>JSON.stringify(String(s??''));
+const uid=()=>Date.now()+Math.random();
+const byDate=(a,b)=>String(b.date||'').localeCompare(String(a.date||''))+(Number(b.id||0)-Number(a.id||0));
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function go(id,btn){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active'); else {let n=document.querySelector(`[data-nav="${id}"]`);if(n)n.classList.add('active')}
+ if(['customer','supplier','salary'].includes(id))renderPeople(id,'');if(id==='inventory')renderInventory('');if(id==='sales')renderSales();if(id==='vehicle')renderVehicles('');if(id==='monthly'){monthPick.value=monthPick.value||today().slice(0,7);renderMonthly()}window.scrollTo(0,0)
+}
+function signed(x){
+ if(x.type==='cash')return x.action==='in'?+x.amount:-+x.amount;
+ if(x.type==='customer')return x.action==='debt'?+x.amount:-+x.amount;
+ if(x.type==='supplier')return x.action==='purchase'?+x.amount:-+x.amount;
+ if(x.type==='salary')return ['salary','ot','water','ice'].includes(x.action)?+x.amount:-+x.amount;
+ if(x.type==='expense')return +x.amount;
+ return 0
+}
+function openForm(type,preset=''){
+ fType.value=type;fDate.value=today();fAmount.value='';fNote.value='';amountWrap.style.display='';fAmount.required=true;
+ const d=document.getElementById('dynamic'),titles={cash:'每日 Cash In / Out',customer:'客户欠款 / Payment',supplier:'Supplier 进货 / Payment',salary:'员工薪水',expense:'费用',inventory:'库存进 / 出',sale:'新增销售',vehicle:'车辆费用'};
+ formTitle.textContent=titles[type]||'新增记录';
+ if(type==='cash')d.innerHTML=`<div class="field"><label>类型</label><select id="fAction"><option value="in">Cash In 收入</option><option value="out">Cash Out 支出</option></select></div><div class="field"><label>项目 / 对方</label><input id="fName" value="${esc(preset)}" placeholder="例如：现金销售"></div>`;
+ if(type==='customer'){let g=preset?lastGroup('customer',preset):customerGroup;d.innerHTML=`<div class="field"><label>客户名称</label><input id="fName" required value="${esc(preset)}" placeholder="客户名称"></div><div class="field"><label>地区 / 组别</label><select id="fGroup">${customerGroups.slice(1).map(x=>`<option ${x===g?'selected':''}>${esc(x)}</option>`).join('')}</select></div><div class="field"><label>类型</label><select id="fAction"><option value="debt">新增欠款</option><option value="payment">Payment 收款</option></select></div>`;}
+ if(type==='supplier'){let g=preset?lastGroup('supplier',preset):supplierGroup;d.innerHTML=`<div class="field"><label>Supplier</label><input id="fName" required value="${esc(preset)}" placeholder="Supplier 名称"></div><div class="field"><label>组别</label><select id="fGroup">${supplierGroups.slice(1).map(x=>`<option ${x===g?'selected':''}>${esc(x)}</option>`).join('')}</select></div><div class="field"><label>类型</label><select id="fAction"><option value="purchase">进货 / 新增应付</option><option value="payment">Payment 已付款</option></select></div>`;}
+ if(type==='salary')d.innerHTML=`<div class="field"><label>员工</label><input id="fName" required value="${esc(preset)}" placeholder="员工名称"></div><div class="field"><label>类型</label><select id="fAction"><option value="salary">工资</option><option value="ot">OT</option><option value="water">水钱</option><option value="ice">冰钱</option><option value="advance">Advance / 预支</option><option value="paid">已付工资</option></select></div>`;
+ if(type==='expense')d.innerHTML=`<div class="field"><label>费用分类</label><select id="fName"><option>油钱</option><option>电费</option><option>水费</option><option>租金</option><option>员工餐</option><option>运输</option><option>冰</option><option>包装</option><option>维修</option><option>电话/网络</option><option>杂费</option><option>其他</option></select></div>`;
+  if(type==='vehicle')d.innerHTML=`<div class="field"><label>车辆</label><input id="fName" required value="${esc(preset)}" placeholder="例如：VAN 1 / WXY1234"></div><div class="field"><label>项目</label><select id="fAction"><option value="fuel">打油</option><option value="repair">修理</option><option value="inspection">验车</option><option value="insurance">保险</option><option value="roadtax">Roadtax</option><option value="other">其他</option></select></div>`;
+ if(type==='inventory'){amountWrap.style.display='none';fAmount.required=false;d.innerHTML=`<div class="field"><label>货品名称</label><input id="fName" required value="${esc(preset)}" placeholder="例如：Udang 40/50"></div><div class="two"><div class="field"><label>类型</label><select id="fAction"><option value="in">库存进货</option><option value="out">库存出货 / 调整</option></select></div><div class="field"><label>数量</label><input id="fQty" type="number" min="0" step=".001" inputmode="decimal" required></div></div><div class="two"><div class="field"><label>单位</label><select id="fUnit"><option>kg</option><option>box</option><option>bag</option><option>pcs</option><option>pkt</option></select></div><div class="field"><label>成本 / 单位 RM</label><input id="fCost" type="number" min="0" step=".01" inputmode="decimal" value="0"></div></div>`}
+ if(type==='sale'){amountWrap.style.display='none';fAmount.required=false;d.innerHTML=`<div class="two"><div class="field"><label>客户</label><input id="fCustomer" required value="${esc(preset)}" placeholder="客户名称"></div><div class="field"><label>付款</label><select id="fPay"><option value="credit">欠款 Credit</option><option value="cash">Cash 已付</option></select></div></div><div class="field"><label>货品</label><input id="fProduct" required list="productList" placeholder="选择 / 输入货品"><datalist id="productList">${productNames().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></div><div class="two"><div class="field"><label>数量</label><input id="fQty" type="number" min="0" step=".001" inputmode="decimal" required oninput="calcSale()"></div><div class="field"><label>单位</label><select id="fUnit"><option>kg</option><option>box</option><option>bag</option><option>pcs</option><option>pkt</option></select></div></div><div class="two"><div class="field"><label>售价 / 单位 RM</label><input id="fPrice" type="number" min="0" step=".01" inputmode="decimal" required oninput="calcSale()"></div><div class="field"><label>成本 / 单位 RM</label><input id="fCost" type="number" min="0" step=".01" inputmode="decimal" value="0" oninput="calcSale()"></div></div><div class="card" style="margin-bottom:11px"><div class="label">销售总额</div><div class="big" id="saleTotal">RM 0.00</div><div class="kpi">预计毛利：<span id="saleProfit">RM 0.00</span></div></div>`}
+ modal.classList.add('show');setTimeout(()=>{let el=document.querySelector('#modal input:not([type=hidden])');if(el)el.focus()},80)
+}
+function calcSale(){let q=+(document.getElementById('fQty')?.value||0),p=+(document.getElementById('fPrice')?.value||0),c=+(document.getElementById('fCost')?.value||0);if(document.getElementById('saleTotal'))saleTotal.textContent=money(q*p);if(document.getElementById('saleProfit'))saleProfit.textContent=money(q*(p-c))}
+function closeForm(){modal.classList.remove('show')}
+function saveEntry(e){
+ e.preventDefault();let type=fType.value,date=fDate.value,note=fNote.value.trim(),id=uid();
+ if(type==='sale'){
+   let customer=fCustomer.value.trim(),product=fProduct.value.trim(),qty=+fQty.value,unit=fUnit.value,price=+fPrice.value,cost=+fCost.value,pay=fPay.value,amount=qty*price;
+   let sale={id,type:'sale',date,customer,product,qty,unit,price,cost,amount,pay,note};
+   data.push(sale);
+   if(pay==='credit')data.push({id:uid(),type:'customer',date,amount,name:customer,action:'debt',note:`销售：${product} ${qty}${unit}`,link:id});
+   else data.push({id:uid(),type:'cash',date,amount,name:customer||'现金销售',action:'in',note:`销售：${product} ${qty}${unit}`,link:id});
+   data.push({id:uid(),type:'inventory',date,name:product,action:'out',qty,unit,cost,amount:qty*cost,note:`销售给 ${customer}`,link:id});
+ } else if(type==='inventory'){
+   data.push({id,type,date,name:fName.value.trim(),action:fAction.value,qty:+fQty.value,unit:fUnit.value,cost:+fCost.value,amount:(+fQty.value)*(+fCost.value),note})
+ } else {
+   data.push({id,type,date,amount:+fAmount.value,note,name:(document.getElementById('fName')?.value||'').trim(),action:(document.getElementById('fAction')?.value||'expense'),group:(document.getElementById('fGroup')?.value||'')})
+ }
+ persist();closeForm();if(detail.type===type&&detail.name)showDetail(detail.type,detail.name,detail.from)
+}
+function del(id){
+ if(!confirm('确定删除这笔记录？'))return;
+ let target=data.find(x=>x.id===id),link=target?.type==='sale'?id:target?.link;
+ if(link)data=data.filter(x=>x.id!==id&&x.link!==link&&x.id!==link); else data=data.filter(x=>x.id!==id);
+ persist();if(detail.type)showDetail(detail.type,detail.name,detail.from)
+}
+function label(x){return ({cash:{in:'Cash In',out:'Cash Out'},customer:{debt:'新增欠款',payment:'Payment'},supplier:{purchase:'进货 / 应付',payment:'Payment'},salary:{salary:'工资',ot:'OT',water:'水钱',ice:'冰钱',advance:'Advance / 预支',paid:'已付工资'},expense:{expense:'费用'},vehicle:{fuel:'打油',repair:'修理',inspection:'验车',insurance:'保险',roadtax:'Roadtax',other:'其他'},inventory:{in:'库存进货',out:'库存出货'}}[x.type]||{})[x.action]||'记录'}
+function row(x){
+ if(x.type==='sale')return `<div class="row"><div><div class="rowtitle">${esc(x.customer)} · ${esc(x.product)}</div><div class="meta">${esc(x.date)} · ${x.qty||0}${esc(x.unit||'')} × ${money(x.price)} · ${x.pay==='cash'?'Cash':'Credit'}${x.note?' · '+esc(x.note):''}</div></div><div style="text-align:right"><div class="amt green">${money(x.amount)}</div><div class="meta">毛利 ${money((+x.amount||0)-(+x.qty||0)*(+x.cost||0))}</div><button class="danger" onclick="del(${x.id})">删除</button></div></div>`;
+ if(x.type==='inventory')return `<div class="row"><div><div class="rowtitle">${esc(x.name)}</div><div class="meta">${esc(x.date)} · ${esc(label(x))} · ${x.qty||0}${esc(x.unit||'')}${x.note?' · '+esc(x.note):''}</div></div><div style="text-align:right"><div class="amt ${x.action==='in'?'green':'red'}">${x.action==='in'?'+':'-'}${x.qty||0}${esc(x.unit||'')}</div><div class="meta">${money(x.cost||0)}/单位</div>${x.link?'':'<button class="danger" onclick="del('+x.id+')">删除</button>'}</div></div>`;
+ let neg=(x.type==='expense'||x.type==='vehicle'||(x.type==='cash'&&x.action==='out')||(['customer','supplier','salary'].includes(x.type)&&signed(x)>0));
+ return `<div class="row"><div><div class="rowtitle">${esc(x.name||label(x))}</div><div class="meta">${esc(x.date)} · ${esc(label(x))}${x.note?' · '+esc(x.note):''}</div></div><div style="text-align:right"><div class="amt ${neg?'red':'green'}">${money(x.amount)}</div>${x.link?'':'<button class="danger" onclick="del('+x.id+')">删除</button>'}</div></div>`
+}
+function personBalance(type,name){
+ return data.filter(x=>x.type===type&&x.name===name).reduce((s,x)=>s+signed(x),0)
+}
+function lastGroup(type,name){
+ let a=data.filter(x=>x.type===type&&x.name===name&&x.group);return a.length?a.at(-1).group:''
+}
+function renderGroupTabs(){
+ let ct=document.getElementById('customerTabs'),st=document.getElementById('supplierTabs');
+ if(ct)ct.innerHTML=customerGroups.map(g=>`<button class="${g===customerGroup?'on':''}" onclick="customerGroup=${jsq(g)};renderGroupTabs();renderPeople('customer','')">${esc(g)}</button>`).join('');
+ if(st)st.innerHTML=supplierGroups.map(g=>`<button class="${g===supplierGroup?'on':''}" onclick="supplierGroup=${jsq(g)};renderGroupTabs();renderPeople('supplier','')">${esc(g)}</button>`).join('')
+}
+function renderPeople(type,q=''){
+ let names=[...new Set(data.filter(x=>x.type===type&&x.name).map(x=>x.name))];
+ if(type==='customer'&&customerGroup!=='全部')names=names.filter(n=>lastGroup(type,n)===customerGroup);
+ if(type==='supplier'&&supplierGroup!=='全部')names=names.filter(n=>lastGroup(type,n)===supplierGroup);
+ let a=names.filter(n=>n.toLowerCase().includes(q.toLowerCase())).map(n=>[n,personBalance(type,n),lastGroup(type,n)]).sort((a,b)=>b[1]-a[1]);
+ let id=type+'People';document.getElementById(id).innerHTML=a.length?a.map(([n,v,g])=>{let paid=type==='customer'&&v<=0&&data.some(x=>x.type==='customer'&&x.name===n);return `<div class="person ${paid?'paidGlow':''}" onclick='showDetail("${type}",${jsq(n)},"${type}")'><div><div class="name">${esc(n)}</div><div class="meta">点进去看全部明细 / Statement</div>${g?`<span class="groupTag">${esc(g)}</span>`:''}</div><div style="text-align:right"><div class="amt ${v>0?'red':'green'}">${money(Math.max(0,v))}</div>${paid?'<div class="meta green">✓ 已付款</div>':''}</div></div>`}).join(''):'<div class="empty">还没有记录</div>'
+}
+
+function showDetail(type,name,from){
+ detail={type,name,from};document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));detailName.textContent=name;
+ let a=data.filter(x=>x.type===type&&x.name===name).sort(byDate),plus=a.filter(x=>signed(x)>0).reduce((s,x)=>s+(+x.amount||0),0),minus=a.filter(x=>signed(x)<0).reduce((s,x)=>s+(+x.amount||0),0),due=plus-minus;
+ dAdd.textContent=money(plus);dPaid.textContent=money(minus);dDue.textContent=money(Math.max(0,due));
+ if(type==='customer'){dL1.textContent='总欠款';dL2.textContent='已收款'}
+ else if(type==='supplier'){dL1.textContent='总进货';dL2.textContent='已付款'}
+ else {dL1.textContent='工资/OT/加项';dL2.textContent='已付/Advance'}
+ detailAdd.onclick=()=>openForm(type,name);statementBtn.style.display='';detailList.innerHTML=a.length?a.map(row).join(''):'<div class="empty">没有明细</div>';document.getElementById('detail').classList.add('active');window.scrollTo(0,0)
+}
+function backDetail(){go(detail.from);detail={type:null,name:null,from:null}}
+function showStatement(){
+ if(!detail.type||!detail.name)return;showEntityStatement(detail.type,detail.name,detail.from)
+}
+function showEntityStatement(type,name,from){
+ statementBack={type,name,from};let a=data.filter(x=>x.type===type&&x.name===name).sort((x,y)=>String(x.date).localeCompare(String(y.date))||x.id-y.id),bal=0;
+ let cfg={customer:{title:'Customer Statement',who:'客户',total:'Outstanding'},supplier:{title:'Supplier Statement',who:'Supplier',total:'Outstanding'},salary:{title:'Employee Statement',who:'员工',total:'余额'},vehicle:{title:'Vehicle Statement',who:'车辆',total:'累计费用'}}[type]||{title:'Statement',who:'名称',total:'总额'};
+ let rows;
+ if(type==='vehicle'){
+   rows=a.map(x=>{bal+=(+x.amount||0);return `<tr><td>${esc(x.date)}</td><td>${esc(label(x))}${x.note?'<br><span class="meta">'+esc(x.note)+'</span>':''}</td><td>${money(x.amount)}</td><td>${money(bal)}</td></tr>`}).join('');
+ }else{
+   rows=a.map(x=>{bal+=signed(x);return `<tr><td>${esc(x.date)}</td><td>${esc(label(x))}${x.note?'<br><span class="meta">'+esc(x.note)+'</span>':''}</td><td>${money(x.amount)}</td><td>${money(Math.max(0,bal))}</td></tr>`}).join('');
+ }
+ statementTitle.textContent=cfg.title;
+ statementBox.innerHTML=`<h3>YF Boss · ${esc(cfg.title)}</h3><div class="meta" style="margin-bottom:12px">${esc(cfg.who)}：${esc(name)} · 截至 ${today()}</div><table><thead><tr><th>日期</th><th>项目</th><th>金额</th><th>${type==='vehicle'?'累计':'余额'}</th></tr></thead><tbody>${rows||'<tr><td colspan="4">没有记录</td></tr>'}</tbody></table><div style="text-align:right;margin-top:12px;font-weight:850">${esc(cfg.total)}：${money(type==='vehicle'?bal:Math.max(0,bal))}</div>`;
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('statement').classList.add('active');window.scrollTo(0,0)
+}
+function backStatement(){if(statementBack?.type==='vehicle'){go('vehicle');statementBack=null}else if(statementBack)showDetail(statementBack.type,statementBack.name,statementBack.from);else go('home')}
+function productNames(){return [...new Set(data.filter(x=>x.type==='inventory'&&x.name).map(x=>x.name))].sort()}
+function stockFor(name){
+ let list=data.filter(x=>x.type==='inventory'&&x.name===name),qty=list.reduce((s,x)=>s+(x.action==='in'?+x.qty:-+x.qty),0);
+ let ins=list.filter(x=>x.action==='in'&&+x.qty>0),inQty=ins.reduce((s,x)=>s+(+x.qty||0),0),inVal=ins.reduce((s,x)=>s+(+x.qty||0)*(+x.cost||0),0),avg=inQty?inVal/inQty:0;
+ return {qty,avg,value:Math.max(0,qty)*avg,unit:list.at(-1)?.unit||''}
+}
+function renderInventory(q=''){
+ let names=productNames().filter(n=>n.toLowerCase().includes(q.toLowerCase()));
+ inventoryList.innerHTML=names.length?names.map(n=>{let s=stockFor(n);return `<div class="person" onclick='openForm("inventory",${jsq(n)})'><div><div class="name">${esc(n)}</div><div class="meta">平均成本 ${money(s.avg)} / ${esc(s.unit||'unit')} · 点这里调整库存</div></div><div style="text-align:right"><div class="amt ${s.qty<0?'red':'green'}">${Number(s.qty.toFixed(3))} ${esc(s.unit)}</div><div class="meta">${money(s.value)}</div></div></div>`}).join(''):'<div class="empty">还没有库存记录</div>'
+}
+function renderSales(btn){
+ if(btn){document.querySelectorAll('#sales .tabs button').forEach(x=>x.classList.remove('on'));btn.classList.add('on')}
+ let a=data.filter(x=>x.type==='sale'),ym=today().slice(0,7);if(salesFilter==='today')a=a.filter(x=>x.date===today());if(salesFilter==='month')a=a.filter(x=>String(x.date).startsWith(ym));a.sort(byDate);salesList.innerHTML=a.length?a.map(row).join(''):'<div class="empty">还没有销售记录</div>'
+}
+function renderVehicles(q=''){
+ let names=[...new Set(data.filter(x=>x.type==='vehicle'&&x.name).map(x=>x.name))].filter(n=>n.toLowerCase().includes(q.toLowerCase())).sort();
+ vehicleList.innerHTML=names.length?names.map(n=>{let a=data.filter(x=>x.type==='vehicle'&&x.name===n),total=a.reduce((s,x)=>s+(+x.amount||0),0),recent=[...a].sort(byDate).slice(0,5);return `<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><div class="name">🚛 ${esc(n)}</div><div class="meta">打油 · 修理 · 验车 · 保险 · Roadtax</div></div><div class="amt red">${money(total)}</div></div><div style="margin-top:10px" class="list">${recent.map(row).join('')}</div><div class="two" style="margin-top:8px"><button class="secondary" onclick='openForm("vehicle",${jsq(n)})'>＋ 加记录</button><button class="primary" onclick='showEntityStatement("vehicle",${jsq(n)},"vehicle")'>📄 Statement</button></div></div>`}).join(''):'<div class="empty">还没有车辆记录</div>'
+}
+let customerMatrixOpen=false;
+let matrixRegion='全部', matrixCustomer='全部', matrixPage=1;
+const MATRIX_PAGE_SIZE=10;
+function toggleCustomerMatrix(){customerMatrixOpen=!customerMatrixOpen;let el=document.getElementById('customerMatrix');if(!el)return;el.style.display=customerMatrixOpen?'block':'none';if(customerMatrixOpen){matrixRegion=customerGroup||'全部';matrixCustomer='全部';matrixPage=1;renderCustomerMatrix('customerMatrix')}}
+function monthDays(ym){let [y,m]=ym.split('-').map(Number);return new Date(y,m,0).getDate()}
+function customerDebtAlloc(name,ym){
+ let [yy,mm]=ym.split('-').map(Number),end=yy+'-'+String(mm).padStart(2,'0')+'-'+String(monthDays(ym)).padStart(2,'0');
+ let entries=data.filter(x=>x.type==='customer'&&x.name===name&&String(x.date||'')<=end).sort((a,b)=>String(a.date).localeCompare(String(b.date))||Number(a.id||0)-Number(b.id||0));
+ let debts=[]; entries.forEach(x=>{if(x.action==='debt')debts.push({date:x.date,amount:+x.amount||0,remain:+x.amount||0});else if(x.action==='payment'){let pay=+x.amount||0;for(let d of debts){if(pay<=0)break;let use=Math.min(pay,d.remain);d.remain-=use;pay-=use}}});
+ let map={}; debts.filter(d=>String(d.date).startsWith(ym)).forEach(d=>{let day=Number(d.date.slice(-2));if(!map[day])map[day]={amount:0,remain:0};map[day].amount+=d.amount;map[day].remain+=d.remain});return map
+}
+function setMatrixRegion(v,targetId){matrixRegion=v;matrixCustomer='全部';matrixPage=1;renderCustomerMatrix(targetId)}
+function setMatrixCustomer(v,targetId){matrixCustomer=v;matrixPage=1;renderCustomerMatrix(targetId)}
+function setMatrixPage(v,targetId){matrixPage=Math.max(1,v);renderCustomerMatrix(targetId)}
+function monthlyCustomerText(name,ym){let map=customerDebtAlloc(name,ym),lines=[],total=0,remain=0;Object.keys(map).sort((a,b)=>a-b).forEach(d=>{let c=map[d];total+=c.amount;remain+=c.remain;lines.push(`${d}/${ym.slice(5,7)}  ${money(c.amount)}  ${c.remain<=.005?'PAID':c.remain<c.amount?'PARTIAL':'UNPAID'}`)});return `YF Boss - Customer Monthly Statement\nCustomer: ${name}\nMonth: ${ym}\n\n${lines.join('\n')}\n\nTotal: ${money(total)}\nPaid: ${money(total-remain)}\nOutstanding: ${money(remain)}`}
+async function shareCustomerMonthly(name,ym){let text=monthlyCustomerText(name,ym);try{if(navigator.share)await navigator.share({title:`${name} ${ym} Statement`,text});else{await navigator.clipboard.writeText(text);alert('Statement 已复制，可以贴去 WhatsApp 发给顾客')}}catch(e){}}
+function printCustomerMonthly(name,ym){let map=customerDebtAlloc(name,ym),rows='',total=0,remain=0;for(let d=1;d<=monthDays(ym);d++){let c=map[d];if(!c)continue;total+=c.amount;remain+=c.remain;let st=c.remain<=.005?'已付款':c.remain<c.amount?'部分付款':'未付款';rows+=`<tr><td>${d}</td><td>${money(c.amount)}</td><td>${st}</td><td>${money(c.remain)}</td></tr>`}let w=window.open('','_blank');if(!w)return alert('请允许弹出窗口');w.document.write(`<!doctype html><meta charset="utf-8"><title>${esc(name)} Statement</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#222}h2{margin:0 0 6px}.meta{color:#666;margin-bottom:18px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:9px;text-align:right}th:first-child,td:first-child{text-align:center}.sum{font-weight:bold;background:#f4f4f4}.paid{background:#d9ead3}.note{margin-top:18px;color:#666}@media print{button{display:none}}</style><h2>YF Boss · Customer Monthly Statement</h2><div class="meta">Customer: ${esc(name)} · Month: ${esc(ym)}</div><table><thead><tr><th>日</th><th>账单</th><th>状态</th><th>未付</th></tr></thead><tbody>${rows}<tr class="sum"><td>TOTAL</td><td>${money(total)}</td><td>已付 ${money(total-remain)}</td><td>${money(remain)}</td></tr></tbody></table><div class="note">此版本只显示该顾客资料。</div><br><button onclick="print()">打印 / 存成 PDF</button>`);w.document.close()}
+function renderCustomerMatrix(targetId,forcedMonth){
+ let host=document.getElementById(targetId);if(!host)return;let ym=forcedMonth||(document.getElementById('customerMatrixMonth')?.value||today().slice(0,7));
+ let allNames=[...new Set(data.filter(x=>x.type==='customer'&&x.name&&String(x.date||'').slice(0,7)<=ym).map(x=>x.name))].sort();
+ let regions=['全部','ALOR GAJAH','华人','海边','Mary','PD','早上']; if(targetId!=='customerMatrix'&&matrixRegion==='全部'&&customerGroup)matrixRegion=customerGroup;
+ let regionNames=allNames.filter(n=>matrixRegion==='全部'||lastGroup('customer',n)===matrixRegion);
+ if(matrixCustomer!=='全部'&&!regionNames.includes(matrixCustomer))matrixCustomer='全部';
+ let filtered=matrixCustomer==='全部'?regionNames:regionNames.filter(n=>n===matrixCustomer), pages=Math.max(1,Math.ceil(filtered.length/MATRIX_PAGE_SIZE));matrixPage=Math.min(matrixPage,pages);
+ let names=matrixCustomer==='全部'?filtered.slice((matrixPage-1)*MATRIX_PAGE_SIZE,matrixPage*MATRIX_PAGE_SIZE):filtered;
+ let days=monthDays(ym), maps=Object.fromEntries(names.map(n=>[n,customerDebtAlloc(n,ym)]));
+ let totalDebt=0,totalRemain=0,rows='';for(let d=1;d<=days;d++){rows+=`<tr><td class="day">${d}</td>`;for(let n of names){let c=maps[n][d];if(!c){rows+='<td></td>';continue}totalDebt+=c.amount;totalRemain+=c.remain;let cls=c.remain<=.005?'paidCell':c.remain<c.amount?'partialCell':'unpaidCell';rows+=`<td class="${cls}" title="${esc(n)} · ${d}日 · 未收 ${money(c.remain)}">${money(c.amount).replace('RM ','')}</td>`}rows+='</tr>'}
+ let totals=names.map(n=>{let cells=Object.values(maps[n]),amt=cells.reduce((s,c)=>s+c.amount,0),rem=cells.reduce((s,c)=>s+c.remain,0),cls=amt&&rem<=.005?'paidCell':'';return `<td class="${cls}">${money(amt).replace('RM ','')}</td>`}).join('');
+ let regionBtns=regions.map(g=>`<button class="${matrixRegion===g?'on':''}" onclick="setMatrixRegion(${jsq(g)},'${targetId}')">${esc(g)}</button>`).join('');
+ let customerOptions='<option value="全部">全部顾客</option>'+regionNames.map(n=>`<option value="${esc(n)}" ${matrixCustomer===n?'selected':''}>${esc(n)}</option>`).join('');
+ let controls=`<div class="matrixHead"><div><b>客户月结付款表</b><div class="meta">先选地区，也可以只看一个顾客 · 每页最多 10 个顾客</div></div><div class="field"><label>月份</label><input id="customerMatrixMonth" type="month" value="${esc(ym)}" onchange="matrixPage=1;renderCustomerMatrix('${targetId}')"></div></div><div class="tabs" style="margin:10px 0">${regionBtns}</div><div class="two" style="margin-bottom:10px"><div class="field"><label>单个顾客</label><select onchange="setMatrixCustomer(this.value,'${targetId}')">${customerOptions}</select></div>${matrixCustomer!=='全部'?`<div class="field"><label>发给顾客</label><div class="two"><button class="secondary" onclick="shareCustomerMonthly(${jsq(matrixCustomer)},'${ym}')">📤 分享</button><button class="primary" onclick="printCustomerMonthly(${jsq(matrixCustomer)},'${ym}')">📄 PDF / 打印</button></div></div>`:'<div class="field"><label>提示</label><div class="meta">选择一个顾客后，可分享或存成 PDF</div></div>'}</div>`;
+ let pager=matrixCustomer==='全部'&&filtered.length>MATRIX_PAGE_SIZE?`<div style="display:flex;justify-content:center;align-items:center;gap:10px;margin:12px 0"><button class="secondary" ${matrixPage<=1?'disabled':''} onclick="setMatrixPage(${matrixPage-1},'${targetId}')">← 上一页</button><b>${matrixPage} / ${pages}</b><button class="secondary" ${matrixPage>=pages?'disabled':''} onclick="setMatrixPage(${matrixPage+1},'${targetId}')">下一页 →</button></div>`:'';
+ host.innerHTML=controls+`<div class="miniStats"><div class="box"><div class="label">本页账单</div><div class="big">${money(totalDebt)}</div></div><div class="box"><div class="label">已收</div><div class="big green">${money(totalDebt-totalRemain)}</div></div><div class="box"><div class="label">未收</div><div class="big red">${money(totalRemain)}</div></div><div class="box"><div class="label">收款率</div><div class="big">${totalDebt?Math.round((totalDebt-totalRemain)/totalDebt*100):0}%</div></div></div><div class="payLegend"><span><i class="swatch" style="background:#d9ead3"></i>已付款</span><span><i class="swatch" style="background:#fff;border:1px solid #ddd"></i>未付款</span><span><i class="swatch" style="background:#fff4cc"></i>部分付款</span></div>${pager}<div class="paytableWrap"><table class="paytable"><thead><tr><th class="day">日</th>${names.map(n=>`<th>${esc(n)}</th>`).join('')}</tr></thead><tbody>${rows}<tr class="totalRow"><td class="day">TOTAL</td>${totals}</tr></tbody></table></div>${pager}${names.length?'':'<div class="empty">这个月份 / 地区还没有客户记录</div>'}`
+}
+function ledgerManualKey(ym){return 'yfBossLedgerManual_'+ym}
+function getLedgerManual(ym){try{return JSON.parse(localStorage.getItem(ledgerManualKey(ym))||'[]')}catch(e){return []}}
+function saveLedgerManual(ym,i,field,val){let a=getLedgerManual(ym);while(a.length<5)a.push({name:'',add:0,deduct:0,note:''});a[i][field]=field==='add'||field==='deduct'?(+val||0):val;localStorage.setItem(ledgerManualKey(ym),JSON.stringify(a));renderMonthly()}
+function renderMonthly(){
+ let ym=(document.getElementById('monthPick')?.value||today().slice(0,7)), endDate=ym+'-31';
+ let sales=data.filter(x=>x.type==='sale'&&String(x.date).startsWith(ym)),exp=data.filter(x=>x.type==='expense'&&String(x.date).startsWith(ym)),veh=data.filter(x=>x.type==='vehicle'&&String(x.date).startsWith(ym)),cash=data.filter(x=>x.type==='cash'&&String(x.date).startsWith(ym)),sal=data.filter(x=>x.type==='salary'&&String(x.date).startsWith(ym));
+ let st=sales.reduce((s,x)=>s+(+x.amount||0),0),cashSales=sales.filter(x=>x.pay==='cash').reduce((s,x)=>s+(+x.amount||0),0),gp=sales.reduce((s,x)=>s+(+x.amount||0)-(+x.qty||0)*(+x.cost||0),0),ex=exp.reduce((s,x)=>s+(+x.amount||0),0),ve=veh.reduce((s,x)=>s+(+x.amount||0),0),sn=sal.reduce((s,x)=>s+Math.max(0,signed(x)),0),cn=cash.reduce((s,x)=>s+signed(x),0);
+ let groups=['ALOR GAJAH','华人','海边','Mary','PD','早上'];
+ let custRows=groups.map(g=>({name:'bill / '+g,add:data.filter(x=>x.type==='customer'&&x.action==='debt'&&String(x.date).startsWith(ym)&&lastGroup('customer',x.name)===g).reduce((s,x)=>s+(+x.amount||0),0),deduct:0,note:'客户欠款'}));
+ let suppGroups=['马六甲','冷冻货','瓜拉'];
+ let suppRows=suppGroups.map(g=>({name:'Supply / '+g,add:0,deduct:data.filter(x=>x.type==='supplier'&&x.action==='purchase'&&String(x.date).startsWith(ym)&&lastGroup('supplier',x.name)===g).reduce((s,x)=>s+(+x.amount||0),0),note:'Supplier'}));
+ let auto=[{name:'Sales Cash',add:cashSales,deduct:0,note:'现金销售'},...custRows,...suppRows,{name:'员工工资 / OT / 水钱 / Advance / 冰钱',add:0,deduct:sn,note:'员工'},{name:'车油 / 修理 / 验车 / 保险 / Roadtax',add:0,deduct:ve,note:'车辆'},{name:'饭 / 杂物 / 水电费 / 其他',add:0,deduct:ex,note:'费用'}];
+ let manual=getLedgerManual(ym);while(manual.length<5)manual.push({name:'',add:0,deduct:0,note:''});
+ let rows=auto.map(r=>`<tr><td>${esc(r.name)}</td><td>${r.add?money(r.add):''}</td><td>${r.deduct?money(r.deduct):''}</td><td>${esc(r.note||'')}</td></tr>`).join('');
+ rows+=manual.slice(0,5).map((r,i)=>`<tr><td><input placeholder="空白项目 ${i+1}" value="${esc(r.name||'')}" onchange="saveLedgerManual('${ym}',${i},'name',this.value)"></td><td><input type="number" step="0.01" placeholder="0.00" value="${r.add||''}" onchange="saveLedgerManual('${ym}',${i},'add',this.value)"></td><td><input type="number" step="0.01" placeholder="0.00" value="${r.deduct||''}" onchange="saveLedgerManual('${ym}',${i},'deduct',this.value)"></td><td><input placeholder="备注" value="${esc(r.note||'')}" onchange="saveLedgerManual('${ym}',${i},'note',this.value)"></td></tr>`).join('');
+ let totalAdd=auto.reduce((s,r)=>s+r.add,0)+manual.slice(0,5).reduce((s,r)=>s+(+r.add||0),0), totalDeduct=auto.reduce((s,r)=>s+r.deduct,0)+manual.slice(0,5).reduce((s,r)=>s+(+r.deduct||0),0), net=totalAdd-totalDeduct;
+ monthlyBox.innerHTML=`<div class="statement"><h3>YF Boss · 月结总账报表</h3><div class="meta">月份：${esc(ym)} · 下方保留 5 个空白项目，可自己填写</div><div class="reportGrid" style="margin-top:12px"><div class="box"><div class="label">总收入（加）</div><div class="big green">${money(totalAdd)}</div></div><div class="box"><div class="label">总支出（扣）</div><div class="big red">${money(totalDeduct)}</div></div><div class="box"><div class="label">本月净额</div><div class="big ${net>=0?'green':'red'}">${money(net)}</div></div><div class="box"><div class="label">本月销售</div><div class="big">${money(st)}</div></div></div><div class="ledgerWrap"><table class="ledger"><thead><tr><th>项目</th><th>加（收入）</th><th>扣（支出）</th><th>备注</th></tr></thead><tbody>${rows}<tr class="sum"><td>合计</td><td>${money(totalAdd)}</td><td>${money(totalDeduct)}</td><td></td></tr><tr class="net"><td>本月净额</td><td colspan="2">${money(net)}</td><td>${net>=0?'盈余':'亏损'}</td></tr></tbody></table></div><div class="ledgerNote">空白项目会按月份自动保存；填写“加”或“扣”后会立即计入合计。</div><div class="subhead" style="margin-top:20px">👤 客户月结付款表</div><div id="monthlyCustomerMatrix"></div></div>`;
+ renderCustomerMatrix('monthlyCustomerMatrix',ym)
+}
+function render(){
+ let cash=data.filter(x=>x.type==='cash'),cust=data.filter(x=>x.type==='customer'),supp=data.filter(x=>x.type==='supplier'),sal=data.filter(x=>x.type==='salary'),exp=data.filter(x=>x.type==='expense'),sales=data.filter(x=>x.type==='sale'),ym=today().slice(0,7);
+ let sum=a=>a.reduce((s,x)=>s+signed(x),0),salesTotal=a=>a.reduce((s,x)=>s+(+x.amount||0),0),profit=a=>a.reduce((s,x)=>s+(+x.amount||0)-(+x.qty||0)*(+x.cost||0),0);
+ let expToday=exp.filter(x=>x.date===today()).reduce((s,x)=>s+(+x.amount||0),0),expMonth=exp.filter(x=>String(x.date).startsWith(ym)).reduce((s,x)=>s+(+x.amount||0),0),todaySales=sales.filter(x=>x.date===today()),monthSales=sales.filter(x=>String(x.date).startsWith(ym));
+ let stockValue=productNames().reduce((s,n)=>s+stockFor(n).value,0);
+ hCash.textContent=money(sum(cash));hCust.textContent=money(Math.max(0,sum(cust)));hSupp.textContent=money(Math.max(0,sum(supp)));hStock.textContent=money(stockValue);hTodaySales.textContent=money(salesTotal(todaySales));hTodayProfit.textContent=money(profit(todaySales)-expToday);hMonthSales.textContent=money(salesTotal(monthSales));hMonthProfit.textContent=money(profit(monthSales)-expMonth);
+ mSalary.textContent=money(Math.max(0,sum(sal)));mExpense.textContent=money(expMonth);mCash.textContent=money(sum(cash.filter(x=>String(x.date).startsWith(ym))));mItems.textContent=productNames().length;
+ cashList.innerHTML=cash.length?[...cash].sort(byDate).map(row).join(''):'<div class="empty">还没有 Cash 记录</div>';expenseList.innerHTML=exp.length?[...exp].sort(byDate).map(row).join(''):'<div class="empty">还没有费用记录</div>';
+ let r=[...data].filter(x=>!x.link).sort(byDate).slice(0,8);recent.innerHTML=r.length?r.map(row).join(''):'<div class="empty">先新增第一笔记录</div>';
+ renderGroupTabs();renderPeople('customer');renderPeople('supplier');renderPeople('salary');renderInventory();renderSales();renderVehicles('');if(document.getElementById('monthPick')){monthPick.value=monthPick.value||today().slice(0,7);renderMonthly()}
+}
+function exportData(){
+ let blob=new Blob([JSON.stringify({app:'YF Boss',version:6,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='YF_Boss_Backup_'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
+}
+function importData(e){
+ let file=e.target.files?.[0];if(!file)return;let r=new FileReader();r.onload=()=>{try{let obj=JSON.parse(r.result),arr=Array.isArray(obj)?obj:obj.data;if(!Array.isArray(arr))throw Error();if(!confirm(`找到 ${arr.length} 笔记录，确定恢复并合并？`))return;let ids=new Set(data.map(x=>String(x.id)));arr.forEach(x=>{if(!ids.has(String(x.id))){data.push(x);ids.add(String(x.id))}});persist();alert('恢复完成 ✅')}catch(_){alert('这个备份文件无法读取')};e.target.value=''};r.readAsText(file)
+}
+render();
+</script>
+</body></html>
